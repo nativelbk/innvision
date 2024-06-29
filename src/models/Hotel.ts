@@ -1,6 +1,7 @@
 /** @format */
 
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { ImageResponse } from "next/server";
 
 interface IHotel extends Document {
   name: string;
@@ -9,6 +10,7 @@ interface IHotel extends Document {
   rooms: mongoose.Types.ObjectId[];
   roomsReserved: number;
   roomsFree: number;
+  images: string[];
 }
 
 const HotelSchema: Schema<IHotel> = new Schema({
@@ -21,6 +23,7 @@ const HotelSchema: Schema<IHotel> = new Schema({
     default: 0,
   },
   roomsFree: Number,
+  images: [String],
 });
 
 const Hotel: Model<IHotel> =
