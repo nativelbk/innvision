@@ -9,6 +9,7 @@ interface IRoom extends Document {
   price: number;
   description: string;
   available: boolean;
+  roomImages: string[];
 }
 
 const RoomSchema: Schema<IRoom> = new Schema({
@@ -16,8 +17,9 @@ const RoomSchema: Schema<IRoom> = new Schema({
   number: { type: String, required: true },
   type: { type: String, required: true },
   price: { type: Number, required: true },
-  description: { type: String, required: true },
+  description: String,
   available: { type: Boolean, default: true },
+  roomImages: [String],
 });
 
 const Room: Model<IRoom> =
