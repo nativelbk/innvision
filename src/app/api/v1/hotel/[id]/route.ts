@@ -1,38 +1,51 @@
 /** @format */
 
+import { NextApiRequest } from "next";
+import { NextResponse } from "next/server";
 import Hotel from "@/models/Hotel";
 import dbConnect from "@/lib/mongoose";
-import { NextApiRequest, NextApiResponse } from "next";
 
-export async function PATCH(req: NextApiRequest, res: NextApiResponse) {
+export async function PATCH(req: NextApiRequest, { params }: any) {
   await dbConnect();
 
   try {
-    const { id } = req.query;
+    const { id } = params;
     const updatedHotel = await Hotel.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
     if (!updatedHotel) {
-      return res.status(404).json({ success: false, error: "Hotel not found" });
+      return NextResponse.json(
+        { success: false, error: "Hotel not found" },
+        { status: 404 }
+      );
     }
-    return res.status(200).json({ success: true, data: updatedHotel });
+    return NextResponse.json({ success: true, data: updatedHotel });
   } catch (error: any) {
-    return res.status(400).json({ success: false, error: error.message });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 400 }
+    );
   }
 }
 
-export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
+export async function DELETE(req: NextApiRequest, { params }: any) {
   await dbConnect();
 
   try {
-    const { id } = req.query;
+    const { id } = params;
     const deletedHotel = await Hotel.findByIdAndDelete(id);
     if (!deletedHotel) {
-      return res.status(404).json({ success: false, error: "Hotel not found" });
+      return NextResponse.json(
+        { success: false, error: "Hotel not found" },
+        { status: 404 }
+      );
     }
-    return res.status(200).json({ success: true, data: {} });
+    return NextResponse.json({ success: true, data: {} });
   } catch (error: any) {
-    return res.status(400).json({ success: false, error: error.message });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 400 }
+    );
   }
 }

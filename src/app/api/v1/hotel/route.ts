@@ -1,8 +1,8 @@
 /** @format */
+import { NextApiRequest } from "next";
+import { NextResponse } from "next/server";
 import Hotel from "@/models/Hotel";
 import dbConnect from "@/lib/mongoose";
-import { NextApiRequest, NextApiResponse } from "next";
-
 import Joi from "joi";
 
 const hotelSchema = Joi.object({
@@ -14,14 +14,16 @@ const hotelSchema = Joi.object({
   images: Joi.array().items(Joi.string()),
 });
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export const POST = async (req: NextApiRequest) => {
   await dbConnect();
 
   const { error } = hotelSchema.validate(req.body);
-  if (error)
-    return res
-      .status(400)
-      .json({ success: false, error: error.details[0].message });
+  if (error) {
+    return NextResponse.json(
+      { success: false, error: error.details[0].message },
+      { status: 400 }
+    );
+  }
 
   try {
     const { name, location, description, rooms, roomsFree, images } = req.body;
@@ -34,19 +36,28 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       images,
     });
     await newHotel.save();
-    return res.status(201).json({ success: true, data: newHotel });
+    return NextResponse.json(
+      { success: true, data: newHotel },
+      { status: 201 }
+    );
   } catch (error: any) {
-    return res.status(400).json({ success: false, error: error.message });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 400 }
+    );
   }
-}
+};
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export const GET = async () => {
   await dbConnect();
 
   try {
     const hotels = await Hotel.find({});
-    return res.status(200).json({ success: true, data: hotels });
+    return NextResponse.json({ success: true, data: hotels });
   } catch (error: any) {
-    return res.status(400).json({ success: false, error: error.message });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 400 }
+    );
   }
-}
+};
