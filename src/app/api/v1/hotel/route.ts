@@ -14,26 +14,28 @@ const hotelSchema = Joi.object({
   images: Joi.array().items(Joi.string()),
 });
 
-export const POST = async (req: NextApiRequest) => {
+export const POST = async (req, { params }) => {
   await dbConnect();
+  const body = await req.json();
 
-  const { error } = hotelSchema.validate(req.body);
-  if (error) {
-    return NextResponse.json(
-      { success: false, error: error.details[0].message },
-      { status: 400 }
-    );
-  }
+  // const { error } = hotelSchema.validate(req.body);
+  // if (error) {
+  //   return NextResponse.json(
+  //     { success: false, error: error.details[0].message },
+  //     { status: 400 }
+  //   );
+  // }
 
   try {
-    const { name, location, description, rooms, roomsFree, images } = req.body;
+    const { name, location, description, rooms, image, price } = body;
     const newHotel = new Hotel({
       name,
       location,
       description,
       rooms,
-      roomsFree,
-      images,
+      roomsFree: rooms,
+      image,
+      price,
     });
     await newHotel.save();
     return NextResponse.json(
