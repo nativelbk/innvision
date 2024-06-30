@@ -7,23 +7,25 @@ interface IHotel extends Document {
   name: string;
   location: string;
   description: string;
-  rooms: mongoose.Types.ObjectId[];
+  rooms: number;
   roomsReserved: number;
   roomsFree: number;
-  images: string[];
+  image: string;
+  price: number;
 }
 
 const HotelSchema: Schema<IHotel> = new Schema({
   name: { type: String, required: true },
   location: { type: String, required: true },
   description: { type: String, required: true },
-  rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
+  rooms: Number,
   roomsReserved: {
     type: Number,
     default: 0,
   },
   roomsFree: Number,
-  images: [String],
+  image: String,
+  price: Number,
 });
 
 const Hotel: Model<IHotel> =
