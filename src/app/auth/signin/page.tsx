@@ -1,6 +1,7 @@
 /** @format */
 "use client";
 
+import SeConnecter from "@/components/SeConnecter";
 // app/auth/signin/page.tsx
 import { signIn } from "next-auth/react";
 import { useState } from "react";
@@ -18,27 +19,5 @@ export default function SignIn() {
     });
   };
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <button type="submit">Sign In</button>
-      </form>
-    </div>
-  );
+  return <SeConnecter />;
 }
