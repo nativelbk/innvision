@@ -15,25 +15,28 @@ const reservationSchema = Joi.object({
     .default("pending"),
 });
 
-export const POST = async (req: NextApiRequest) => {
+export const POST = async (req) => {
   await dbConnect();
 
-  const { error } = reservationSchema.validate(req.body);
-  if (error) {
-    return NextResponse.json(
-      { success: false, error: error.details[0].message },
-      { status: 400 }
-    );
-  }
+  const body = await req.json();
+
+  // const { error } = reservationSchema.validate(req.body);
+  // if (error) {
+  //   return NextResponse.json(
+  //     { success: false, error: error.details[0].message },
+  //     { status: 400 }
+  //   );
+  // }
 
   try {
-    const { customer, room, startDate, endDate, status } = req.body;
+    const { startDate, endDate, room, number, hotel } = body;
     const newReservation = new Reservation({
-      customer,
+      customer: "667ff6bc37814a2796fd8df1",
       room,
       startDate,
       endDate,
-      status,
+      number,
+      hotel,
     });
     await newReservation.save();
     return NextResponse.json(
@@ -41,6 +44,7 @@ export const POST = async (req: NextApiRequest) => {
       { status: 201 }
     );
   } catch (error: any) {
+    console.log(error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 400 }
@@ -52,7 +56,7 @@ export const GET = async () => {
   await dbConnect();
 
   try {
-    const reservations = await Reservation.find({});
+    const reservations = await Reservation.find({}).populate("hotel");
     return NextResponse.json({ success: true, data: reservations });
   } catch (error: any) {
     return NextResponse.json(
